@@ -70,10 +70,10 @@ const timer = {
       if (reverseTime > 0) {
         const { days, hours, minutes, seconds } = convertMs(reverseTime);
 
-        dataHours.textContent = `${hours}`;
-        dataDays.textContent = `${days}`;
-        dataMinutes.textContent = `${minutes}`;
-        dataSeconds.textContent = `${seconds}`;
+        dataHours.textContent = `${pad(hours)}`;
+        dataDays.textContent = `${pad(days)}`;
+        dataMinutes.textContent = `${pad(minutes)}`;
+        dataSeconds.textContent = `${pad(seconds)}`;
       } else {
         window.alert('The time is up');
         window.location.reload();
