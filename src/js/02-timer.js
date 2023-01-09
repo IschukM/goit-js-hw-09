@@ -1,9 +1,12 @@
-import flatpickr from 'flatpickr';
-import 'flatpickr/dist/flatpickr.min.css';
 import Notiflix from 'notiflix';
+
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
+
 function convertMs(ms) {
+  // Number of milliseconds per unit of time
   const second = 1000;
   const minute = second * 60;
   const hour = minute * 60;
@@ -21,10 +24,13 @@ function convertMs(ms) {
   return { days, hours, minutes, seconds };
 }
 
-date = new Date();
-dateInput = document.querySelector('#datetime-picker');
-const startBtn = document.querySelector('button');
+console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
+console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
+console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
 
+const date = new Date();
+const input = document.querySelector('#datetime-picker');
+const start = document.querySelector('button');
 const dataDays = document.querySelector('[data-days]');
 const dataHours = document.querySelector('[data-hours]');
 const dataMinutes = document.querySelector('[data-minutes]');
@@ -37,9 +43,9 @@ const options = {
   minuteIncrement: 1,
   onClose(selectedDates) {
     if (selectDate.selectedDates[0] > date) {
-      startBtn.disabled = false;
+      start.disabled = false;
     } else {
-      startBtn.disabled = true;
+      start.disabled = true;
       Notiflix.Notify.failure(
         'Вибраний час вже в минулому. Введіть дату з майбутнього!',
         { position: 'center-center', backoverlay: true }
@@ -47,9 +53,8 @@ const options = {
     }
   },
 };
-const selectDate = flatpickr(dateInput, options);
-console.log(selectDate.selectedDates[0]);
 
+const selectDate = flatpickr(input, options);
 const timer = {
   intervalId: null,
   isActive: false,
@@ -65,10 +70,10 @@ const timer = {
       if (reverseTime > 0) {
         const { days, hours, minutes, seconds } = convertMs(reverseTime);
 
-        dataHours.textContent = `${pad(hours)}`;
-        dataDays.textContent = `${pad(days)}`;
-        dataMinutes.textContent = `${pad(minutes)}`;
-        dataSeconds.textContent = `${pad(seconds)}`;
+        dataHours.textContent = `${hours}`;
+        dataDays.textContent = `${days}`;
+        dataMinutes.textContent = `${minutes}`;
+        dataSeconds.textContent = `${seconds}`;
       } else {
         window.alert('The time is up');
         window.location.reload();
@@ -78,12 +83,12 @@ const timer = {
   },
 };
 
-startBtn.setAttribute('disabled', true);
-startBtn.addEventListener('click', onStartBtn);
+start.setAttribute('disabled', true);
+start.addEventListener('click', onStartBtn);
 
 function onStartBtn() {
-  startBtn.setAttribute('disabled', true);
-  dateInput.setAttribute('disabled', true);
+  start.setAttribute('disabled', true);
+  input.setAttribute('disabled', true);
   timer.start();
 }
 
