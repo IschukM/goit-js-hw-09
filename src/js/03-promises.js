@@ -20,12 +20,26 @@ function onSubmitBtn(event) {
   for (let i = 0; i < amount.value; i += 1) {
     const position = i + 1;
     totalDelay = totalDelay + Number(step.value);
-    createPromise(position, totalDelay);
+    createPromise(position, totalDelay)
+      .then(({ position, totalDelay }) => {
+        Notiflix.Notify.success(
+          `✅ Fulfilled promise ${position} in ${totalDelay}ms`,
+          { timeout: 4000 }
+        );
+
+        // console.log(`✅ Fulfilled promise ${position} in ${totalDelay}ms`);
+      })
+      .catch(({ position, totalDelay }) => {
+        Notiflix.Notify.failure(
+          `❌ Rejected promise ${position} in ${totalDelay}ms`,
+          { timeout: 4000 }
+        );
+      });
   }
 }
 
 function createPromise(position, totalDelay) {
-  const promise = new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     setTimeout(() => {
       const shouldResolve = Math.random() > 0.3;
       if (shouldResolve) {
@@ -35,19 +49,4 @@ function createPromise(position, totalDelay) {
       }
     }, totalDelay);
   });
-  promise
-    .then(({ position, totalDelay }) => {
-      Notiflix.Notify.success(
-        `✅ Fulfilled promise ${position} in ${totalDelay}ms`,
-        { timeout: 4000 }
-      );
-
-      // console.log(`✅ Fulfilled promise ${position} in ${totalDelay}ms`);
-    })
-    .catch(({ position, totalDelay }) => {
-      Notiflix.Notify.failure(
-        `❌ Rejected promise ${position} in ${totalDelay}ms`,
-        { timeout: 4000 }
-      );
-    });
 }
